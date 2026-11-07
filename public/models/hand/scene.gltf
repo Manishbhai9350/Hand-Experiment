@@ -1,0 +1,251 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 7527,
+      "max": [
+        67.72127532958984,
+        234.11293029785156,
+        63.059486389160156
+      ],
+      "min": [
+        -73.59456634521484,
+        -135.3275146484375,
+        -43.81255340576172
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 90324,
+      "componentType": 5126,
+      "count": 7527,
+      "max": [
+        0.9955567717552185,
+        0.8818009495735168,
+        0.9997484683990479
+      ],
+      "min": [
+        -0.9979125261306763,
+        -0.9994128346443176,
+        -0.9999861717224121
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 7527,
+      "max": [
+        3.5794100761413574,
+        0.4980350732803345
+      ],
+      "min": [
+        3.0104598999023438,
+        0.007709980010986328
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 41268,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Vor.Bona (https://sketchfab.com/Vor.Bona)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/female-hand-08665c5c84734e7bb1541849bfcd9f6a",
+      "title": "Female Hand"
+    },
+    "generator": "Sketchfab-14.87.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 165072,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 60216,
+      "byteOffset": 165072,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 180648,
+      "byteOffset": 225288,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 405936,
+      "uri": "scene.bin"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "material",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.8,
+          0.8,
+          0.8,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.9524317153998911
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Hand_Mat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "ac8f7c2af2814ab3962e0c18576dd2bb.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        -0.07467628409752702,
+        -0.08592941028061302,
+        0.9934986608155099,
+        0.0,
+        -0.006440711780345602,
+        0.996301227766395,
+        0.08568769329919228,
+        0.0,
+        -0.9971870285082673,
+        2.0816681711721685e-16,
+        -0.0749535200964706,
+        0.0,
+        18.093727111816406,
+        249.6348114013672,
+        -809.2698364257813,
+        1.0
+      ],
+      "name": "CINEMA_4D_Editor"
+    },
+    {
+      "name": "Object_4"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        0.9135454576425999,
+        0.0,
+        -0.40673664307580243,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.40673664307580243,
+        0.0,
+        0.9135454576425999,
+        0.0,
+        0.0,
+        131.0,
+        0.0,
+        1.0
+      ],
+      "name": "Hand"
+    },
+    {
+      "mesh": 0,
+      "name": "Hand_Mat_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}
