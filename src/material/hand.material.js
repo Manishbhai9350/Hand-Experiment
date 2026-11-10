@@ -103,7 +103,7 @@ const fragmentShader = /* glsl */ `
 
 export function createHandMaterial(options = {}, pane = null) {
   const {
-    baseColor = "#1c1c1c",
+    baseColor = "#201f26",
     fresnelColor = "#ffffff",
     gradientColor = "#ffffff",
     fresnelPower = 3.87,

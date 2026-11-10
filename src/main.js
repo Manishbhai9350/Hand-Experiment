@@ -65,8 +65,21 @@ loader.load(
     hand = gltf.scene;
 
     hand.traverse((child) => {
+      console.log(child.isSkinnedMesh);
+      if (child.isSkinnedMesh)
+        console.log(
+          "bones:",
+          child.skeleton.bones.map((b) => b.name),
+        );
+      if (child.isMesh && child.morphTargetDictionary)
+        console.log("morphs:", c.morphTargetDictionary);
       if (child.isMesh) child.material = handMaterial;
     });
+
+    console.log(
+      "clips:",
+      gltf.animations.map((a) => a.name),
+    );
 
     // Center the model and scale it to a consistent size
     const box = new THREE.Box3().setFromObject(hand);
