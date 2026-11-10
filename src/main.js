@@ -15,6 +15,8 @@ const canvas = document.querySelector("canvas");
 
 const pane = new Pane();
 
+pane.hidden = true;
+
 // ---------- Scene ----------
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
