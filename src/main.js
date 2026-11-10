@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { SMAAPass } from "three/examples/jsm/postprocessing/SMAAPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { createHandMaterial } from "./material/hand.material";
@@ -51,6 +52,8 @@ scene.add(dirLight);
 let hand = null;
 let mixer = null;
 const clock = new THREE.Clock();
+
+// God rays go before bloom so the bloom softens them
 
 const handMaterial = createHandMaterial({}, pane);
 
@@ -107,8 +110,8 @@ const FinalShader = {
   uniforms: {
     tDiffuse: { value: null },
     uTime: { value: 0 },
-    uAberration: { value: 0.003 },
-    uGrain: { value: 0.07 },
+    uAberration: { value: 0.0 },
+    uGrain: { value: 0.15 },
     uVignette: { value: 0.9 },
   },
   vertexShader: /* glsl */ `
@@ -161,20 +164,22 @@ composer.addPass(new RenderPass(scene, camera));
 
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.9, // strength
-  0.8, // radius
-  0.15, // threshold
+  1.57, // strength
+  1.19, // radius
+  0, // threshold
 );
 composer.addPass(bloomPass);
-bloomPass.highPassUniforms.smoothWidth.value = 1; // softness
+bloomPass.highPassUniforms.smoothWidth.value = 0.74; // softness
 
 composer.addPass(new OutputPass()); // tone mapping + sRGB conversion
+
+composer.addPass(new SMAAPass(window.innerWidth, window.innerHeight)); // anti-aliasing
 
 const finalPass = new ShaderPass(FinalShader);
 composer.addPass(finalPass);
 
 // ---------- Post-processing controls ----------
-const fx = pane.addFolder({ title: "Post Processing", expanded:false });
+const fx = pane.addFolder({ title: "Post Processing", expanded: false });
 fx.addBinding(bloomPass, "strength", {
   label: "Bloom Strength",
   min: 0,
@@ -238,6 +243,7 @@ function animate() {
   finalPass.uniforms.uTime.value += delta;
 
   controls.update();
+
   composer.render();
 }
 animate();
