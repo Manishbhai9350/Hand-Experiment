@@ -10,6 +10,7 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { createHandMaterial } from "./material/hand.material";
 import { Pane } from "tweakpane";
+import gsap from "gsap";
 
 const canvas = document.querySelector("canvas");
 
@@ -53,71 +54,107 @@ scene.add(dirLight);
 // ---------- Model ----------
 let hand = null;
 let mixer = null;
+let revealAction = null;
+let unfoldAction = null;
 const clock = new THREE.Clock();
-
-// God rays go before bloom so the bloom softens them
 
 const handMaterial = createHandMaterial({}, pane);
 
 const loader = new GLTFLoader();
 loader.load(
-  // "/models/hand/scene.gltf",
   "/models/hand.glb",
   (gltf) => {
     hand = gltf.scene;
 
+    console.log(gltf);
+
     hand.traverse((child) => {
-      console.log(child.isSkinnedMesh);
-      if (child.isSkinnedMesh)
-        console.log(
-          "bones:",
-          child.skeleton.bones.map((b) => b.name),
-        );
-      if (child.isMesh && child.morphTargetDictionary)
-        console.log("morphs:", c.morphTargetDictionary);
       if (child.isMesh) child.material = handMaterial;
+      if (child.isSkinnedMesh) child.frustumCulled = false;
     });
-
-    console.log(
-      "clips:",
-      gltf.animations.map((a) => a.name),
-    );
-
-    // Center the model and scale it to a consistent size
-    const box = new THREE.Box3().setFromObject(hand);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-
-    hand.position.sub(center);
-    hand.position.sub(new THREE.Vector3(0, size.y / 4, 0));
-
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 3 / maxDim;
-    hand.scale.setScalar(scale);
-
-    // Re-center after scaling
-    hand.position.multiplyScalar(scale);
-
-    hand.position.add(new THREE.Vector3(0, 1, -1.2));
 
     scene.add(hand);
 
-    // Play animations if the model has any
-    if (gltf.animations.length) {
-      mixer = new THREE.AnimationMixer(hand);
-      gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
+    // ---------- Copy GLB camera to yours ----------
+    let glbCamera = gltf.cameras[0];
+
+    if (glbCamera) {
+      camera.position.copy(glbCamera.position);
+      camera.quaternion.copy(glbCamera.quaternion);
+      if (glbCamera.isPerspectiveCamera) {
+        camera.fov = glbCamera.fov;
+        camera.near = glbCamera.near;
+        camera.far = glbCamera.far;
+        camera.updateProjectionMatrix();
+      }
+
+      // Point OrbitControls target at where the GLB camera is looking
+      const lookTarget = new THREE.Vector3(0, 0, -1);
+      lookTarget.applyQuaternion(glbCamera.quaternion);
+      lookTarget.add(glbCamera.position);
+      controls.target.copy(lookTarget);
+      controls.update();
     }
+
+    // ---------- Setup both actions ----------
+    mixer = new THREE.AnimationMixer(hand);
+
+    const revealClip = THREE.AnimationClip.findByName(
+      gltf.animations,
+      "hand_reveal",
+    );
+    const unfoldClip = THREE.AnimationClip.findByName(
+      gltf.animations,
+      "hand_unfold",
+    );
+
+    if (!revealClip)
+      console.warn(
+        "hand_reveal not found:",
+        gltf.animations.map((c) => c.name),
+      );
+    if (!unfoldClip)
+      console.warn(
+        "hand_unfold not found:",
+        gltf.animations.map((c) => c.name),
+      );
+
+    revealAction = mixer.clipAction(revealClip);
+    revealAction.setLoop(THREE.LoopOnce);
+    revealAction.clampWhenFinished = true;
+    revealAction.play();
+    revealAction.paused = true;
+
+    unfoldAction = mixer.clipAction(unfoldClip);
+    unfoldAction.setLoop(THREE.LoopOnce);
+    unfoldAction.clampWhenFinished = true;
+    unfoldAction.play();
+    unfoldAction.paused = true;
+
+    mixer.update(0);
+
+    // ---------- Cinematic FX timeline ----------
+    const tl = gsap.timeline();
+
+    // Reveal plays
+    tl.add(() => {
+      revealAction.paused = false;
+    }, 0.2);
+
+    // Unfold triggers
+    tl.add(() => {
+      unfoldAction.paused = false;
+    }, 2.0);
+
+    tl.play();
   },
   (progress) => {
-    if (progress.total) {
+    if (progress.total)
       console.log(
         `Loading: ${((progress.loaded / progress.total) * 100).toFixed(0)}%`,
       );
-    }
   },
-  (error) => {
-    console.error("Error loading model:", error);
-  },
+  (error) => console.error("Error loading model:", error),
 );
 
 // ---------- Post-processing ----------
